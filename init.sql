@@ -1038,7 +1038,6 @@ select SanphamID, TenSanpham, Gia from Sanpham;
 
 UPDATE  Sanpham SET Gia = Gia + 10000 WHERE SanphamID = 1;
 
-ROLLBACK
 
 CREATE TABLE CUSTOMERS (
    ID INT NOT NULL,
@@ -1070,3 +1069,39 @@ COMMIT;
 ROLLBACK;
 
 SELECT * FROM CUSTOMERS;
+
+# Save point command
+DELETE FROM CUSTOMERS;
+
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+
+SELECT * FROM CUSTOMERS;
+
+START TRANSACTION;
+    SAVEPOINT SP1;
+    DELETE FROM CUSTOMERS WHERE ID = 1;
+
+    SAVEPOINT SP2;
+
+    DELETE FROM CUSTOMERS WHERE ID = 2;
+
+    SAVEPOINT SP3;
+    DELETE FROM CUSTOMERS WHERE ID = 3;
+
+## Rollback to the savepoint SP3
+    ROLLBACK TO SP2;
+
+## Rollback to the savepoint SP2
+    ROLLBACK TO SP3;
+
+## RELEASE SAVEPOINT command
+    RELEASE SAVEPOINT SP2;
+
+    COMMIT;
